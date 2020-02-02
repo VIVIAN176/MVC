@@ -2,14 +2,13 @@
 
 }
 #app3 .square{
-    border: 3px solid #ccc;
+    border: 3px solid #352;
     margin-top: 10vw;
     margin-left: 10vw;
     width: 10vw;
     height: 10vw;
-    
+    transition: transform 1s;
 }
 #app3 .square.active{
-    transition: transform 1s;
     transform: translateX(15vw); 
 }

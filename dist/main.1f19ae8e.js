@@ -11021,37 +11021,63 @@ var _jquery = _interopRequireDefault(require("jquery"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //npm install jquery安装jq后会多出node_modules package.json yarn.lock三个文件
-var $button1 = (0, _jquery.default)('#add1');
-var $button2 = (0, _jquery.default)('#minus1');
-var $button3 = (0, _jquery.default)('#mul2');
-var $button4 = (0, _jquery.default)('#divide2');
-var $number = (0, _jquery.default)('#number'); // const n = localStorage.getItem("n")
-// $number.text(n || 100)
+//数据相关 都放到m
+var m = {
+  data: {
+    //初始化数据
+    n: localStorage.getItem("n")
+  }
+}; //视图相关都房到v
 
-$button1.on('click', function () {
-  var n = parseInt($number.text());
-  n += 1;
-  localStorage.setItem("n", n);
-  $number.text(n);
-});
-$button2.on('click', function () {
-  var n = parseInt($number.text());
-  n -= 1;
-  localStorage.setItem("n", n);
-  $number.text(n);
-});
-$button3.on('click', function () {
-  var n = parseInt($number.text());
-  n *= 2;
-  localStorage.setItem("n", n);
-  $number.text(n);
-});
-$button4.on('click', function () {
-  var n = parseInt($number.text());
-  n /= 2;
-  localStorage.setItem("n", n);
-  $number.text(n);
-});
+var v = {
+  html: " <section id=\"app1\">\n    <div class=\"output\"><span id=\"number\">100</span></div>\n    <div class=\"actions\">\n        <button id='add1'>+1</button>\n        <button id='minus1'>-1</button>\n        <button id='mul2'>*2</button>\n        <button id='divide2'>/2</button>\n    </div>\n    </section>",
+  update: function update() {//数据渲染倒页面
+    // c.ui.number.text(m.date.n || 100)
+  },
+  render: function render() {
+    //初始化HTML
+    var $element = (0, _jquery.default)(v.html).appendTo((0, _jquery.default)('body>.page'));
+  }
+};
+var c = {
+  ui: {
+    //需要重要的元素
+    button1: (0, _jquery.default)('#add1'),
+    button2: (0, _jquery.default)('#minus1'),
+    button3: (0, _jquery.default)('#mul2'),
+    button4: (0, _jquery.default)('#divide2'),
+    number: (0, _jquery.default)('#number')
+  },
+  bindEvents: function bindEvents() {
+    //绑定鼠标事件
+    c.ui.button1.on('click', function () {
+      var n = parseInt(c.ui.number.text());
+      n += 1;
+      localStorage.setItem("n", n);
+      c.ui.number.text(n);
+    });
+    c.ui.button2.on('click', function () {
+      var n = parseInt(c.ui.number.text());
+      n -= 1;
+      localStorage.setItem("n", n);
+      c.ui.number.text(n);
+    });
+    c.ui.button3.on('click', function () {
+      var n = parseInt(c.ui.number.text());
+      n *= 2;
+      localStorage.setItem("n", n);
+      c.ui.number.text(n);
+    });
+    c.ui.button4.on('click', function () {
+      var n = parseInt(c.ui.number.text());
+      n /= 2;
+      localStorage.setItem("n", n);
+      c.ui.number.text(n);
+    });
+  }
+}; //第一次渲染
+
+v.render();
 },{"./app1.css":"app1.css","jquery":"../node_modules/jquery/dist/jquery.js"}],"app2.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
@@ -11060,29 +11086,34 @@ module.hot.accept(reloadCSS);
 },{"_css_loader":"C:/Users/xjlad/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/css-loader.js"}],"app2.js":[function(require,module,exports) {
 "use strict";
 
-var _jquery = _interopRequireDefault(require("jquery"));
-
 require("./app2.css");
+
+var _jquery = _interopRequireDefault(require("jquery"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var html = "\n<section id=\"app2\">\n    <ol class=\"tab-bar\">\n        <li class=\"1selected\"><span>1111</span></li>\n        <li><span>2222</span></li>\n    </ol>\n    <ol class=\"tab-content\">\n        <li class=\"1active\">\u5185\u5BB91</li>\n        <li>\u5185\u5BB92</li>\n    </ol>\n</section>";
+var $element = (0, _jquery.default)(html).appendTo((0, _jquery.default)('body>.page'));
 var $tabBar = (0, _jquery.default)('#app2 .tab-bar');
 var $tabContent = (0, _jquery.default)('#app2 .tab-content');
+var localKey = 'app2.index';
+var index = localStorage.getItem(localKey) || 0;
 $tabBar.on("click", "li", function (e) {
   //不用原生的dom 用$
   var $li = (0, _jquery.default)(e.currentTarget); //target和currentTarget 谁能用就用谁
 
   $li.addClass("selected").siblings().removeClass("selected");
   var index = $li.index();
+  localStorage.setItem(localKey, index);
   $tabContent.children() // .eq(index).css({ display: 'block' })
   // .siblings(index).css({ display: 'none' })
-  .eq(index).addClass('active').siblings(index).removeClass('active'); // // .show() .hide() .css() 永远不要使用这个三个api
+  .eq(index).addClass('active').siblings().removeClass('active'); // // .show() .hide() .css() 永远不K要使用这个三个api
   //这样js就不用管css怎么写  css自己写
   //样式与行为分离  js只管功能 css只管样式
 });
-$tabBar.children().eq(0).trigger('click'); //加载的时候默认选中第1个项目
+$tabBar.children().eq(index).trigger('click'); //加载的时候默认选中第1个项目
 //也可以在第一个的html上面加上选中的样式
-},{"jquery":"../node_modules/jquery/dist/jquery.js","./app2.css":"app2.css"}],"app3.css":[function(require,module,exports) {
+},{"./app2.css":"app2.css","jquery":"../node_modules/jquery/dist/jquery.js"}],"app3.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -11097,8 +11128,21 @@ require("./app3.css");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var $square = (0, _jquery.default)('#app3 .square');
+var html = "\n<section id=\"app3\">\n    <div class=\"square\"></div>\n</section>";
+var $element = (0, _jquery.default)(html).appendTo((0, _jquery.default)('body >.page'));
+var localKey = 'app3.active'; // const active = localStorage.getItem(localKey) === 'yes' ? ture : false
+// yes no undefined
+
+var active = localStorage.getItem(localKey) === 'yes';
+$square.toggleClass('active', active);
 $square.on('click', function () {
-  $square.toggleClass('active');
+  if ($square.hasClass('active')) {
+    $square.removeClass('active');
+    localStorage.setItem('localKey', 'no');
+  } else {
+    $square.addClass('active');
+    localStorage.setItem('app3.active', 'yes');
+  }
 });
 },{"jquery":"../node_modules/jquery/dist/jquery.js","./app3.css":"app3.css"}],"app4.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
@@ -11114,6 +11158,8 @@ require("./app4.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var html = "     <section id=\"app4\">\n<div class=\"circle\"></div>\n</section>";
+var $element = (0, _jquery.default)(html).appendTo((0, _jquery.default)('body>,page'));
 var $circle = (0, _jquery.default)('#app4 .circle');
 $circle.on('mouseenter', function () {
   $circle.addClass('active');
@@ -11162,7 +11208,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53887" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61311" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
