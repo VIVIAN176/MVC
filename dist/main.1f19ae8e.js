@@ -11025,36 +11025,50 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var m = {
   data: {
     //初始化数据
-    n: localStorage.getItem("n")
+    // n: parseInt(localStorage.getItem("n") || 100)
+    n: 100 || localStorage.getItem("n")
   }
 }; //视图相关都房到v
 
 var v = {
-  html: " <section id=\"app1\">\n    <div class=\"output\"><span id=\"number\">100</span></div>\n    <div class=\"actions\">\n        <button id='add1'>+1</button>\n        <button id='minus1'>-1</button>\n        <button id='mul2'>*2</button>\n        <button id='divide2'>/2</button>\n    </div>\n    </section>",
-  update: function update() {//数据渲染倒页面
+  el: null,
+  html: " <section id=\"app1\">\n    <div class=\"output\">\n    <span id=\"number\">{{n}}</span>\n    </div>\n    <div class=\"actions\">\n        <button id='add1'>+1</button>\n        <button id='minus1'>-1</button>\n        <button id='mul2'>*2</button>\n        <button id='divide2'>/2</button>\n    </div>\n    </section>",
+  update: function update() {
+    //数据渲染倒页面
     // c.ui.number.text(m.date.n || 100)
+    v.render();
   },
-  render: function render() {
+  render: function render(container) {
     //初始化HTML
-    var $element = (0, _jquery.default)(v.html).appendTo((0, _jquery.default)('body>.page'));
+    if (v.el === null) {
+      v.el = (0, _jquery.default)(v.html.replace('{{n}}', m.data.n)).appendTo((0, _jquery.default)(container));
+    } else {
+      var newEl = (0, _jquery.default)(v.html.replace('{{n}}', m.data.n));
+      v.el.replaceWith(newEl);
+      v.el = newEl;
+    }
   }
-};
+}; //其他放在c
+
 var c = {
-  ui: {
-    //需要重要的元素
-    button1: (0, _jquery.default)('#add1'),
-    button2: (0, _jquery.default)('#minus1'),
-    button3: (0, _jquery.default)('#mul2'),
-    button4: (0, _jquery.default)('#divide2'),
-    number: (0, _jquery.default)('#number')
+  init: function init(container) {
+    //第一次渲染
+    v.render();
+    c.ui = {
+      //需要重要的元素
+      button1: (0, _jquery.default)('#add1'),
+      button2: (0, _jquery.default)('#minus1'),
+      button3: (0, _jquery.default)('#mul2'),
+      button4: (0, _jquery.default)('#divide2'),
+      number: (0, _jquery.default)('#number')
+    };
+    c.bindEvents();
   },
   bindEvents: function bindEvents() {
     //绑定鼠标事件
     c.ui.button1.on('click', function () {
-      var n = parseInt(c.ui.number.text());
-      n += 1;
-      localStorage.setItem("n", n);
-      c.ui.number.text(n);
+      m.data.n += 1;
+      v.render();
     });
     c.ui.button2.on('click', function () {
       var n = parseInt(c.ui.number.text());
@@ -11075,9 +11089,8 @@ var c = {
       c.ui.number.text(n);
     });
   }
-}; //第一次渲染
-
-v.render();
+};
+c.init();
 },{"./app1.css":"app1.css","jquery":"../node_modules/jquery/dist/jquery.js"}],"app2.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
