@@ -6,6 +6,6 @@
   "author": "zhangdeshou <xjlady@126.com>",
   "license": "MIT",
   "dependencies": {
-    "jquery": "^3.4.1"
+    "jquery": "^3.5.0"
   }
 }
